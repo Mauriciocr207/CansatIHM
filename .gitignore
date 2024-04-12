@@ -1,0 +1,4 @@
+node_modules
+out
+dist
+cansat_db.sqlite

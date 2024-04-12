@@ -1,0 +1,12 @@
+appId: com.cansat.nextron
+productName: cansat app
+copyright: Copyright © 2018 Yoshihide Shiono
+directories:
+  output: out
+  buildResources: src
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
