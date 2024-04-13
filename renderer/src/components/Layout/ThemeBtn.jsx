@@ -6,16 +6,23 @@ import { BsFillMoonStarsFill } from "react-icons/bs";
 export function ThemeBtn({className}) {
     const [darkMode, setDarkMode] = useState(false);
 
+    useEffect(() => {
+        setDarkMode(localStorage.getItem('theme') === "dark");
+    }, []);
+
     useEffect(()=> {
         if(darkMode) {
             document.documentElement.classList.add("dark");
         } else {
             document.documentElement.classList.remove("dark");
-        };
+        }
     }, [darkMode]);
 
     function handleThemeSwitch() {
-        setDarkMode(prev => !prev);
+        setDarkMode(prev => {
+            localStorage.setItem('theme', !prev ? 'dark':'light');
+            return !prev
+        });
     }
     return <>
         <div onClick={handleThemeSwitch} className={`${className} cursor-pointer`}>

@@ -1,11 +1,9 @@
 import { SerialPort } from "serialport";
 import { SerialManager } from "../Serial/SerialManager.js";
-import { BrowserWindow } from "electron";
 import Measurement from "../Models/Measurement.js";
 const serialManager = new SerialManager();
 
 export class ipcMainController {
-
     static async serialConnectionOpen(e, data) {
       const { port, id } = data;
       try {

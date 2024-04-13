@@ -1,10 +1,11 @@
 // Módulos de electron
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, ipcMain } from "electron";
 import serve from "electron-serve";
 import sequelize from "./Database/init.js";
 import log from "electron-log";
 import {fileURLToPath} from "url";
 import path from "path";
+import { ipcMainController } from "./Controllers/ipcMainController.js";
 
 function createWindow() {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -32,7 +33,7 @@ function createWindow() {
     if (isDev) {
       app.setPath("userData", `${app.getPath("userData")} (development)`);
     } else {
-      serve({ directory: "app" });
+      serve({ directory: "dist" });
     }
   
     await app.whenReady();
@@ -42,10 +43,10 @@ function createWindow() {
     const mainWindow = createWindow();
   
     if (isDev) {
-      await mainWindow.loadURL("http://localhost:5173/home");
+      await mainWindow.loadURL("http://localhost:3000/home");
       mainWindow.webContents.openDevTools();
     } else {
-      await mainWindow.loadURL("app://../home");
+      await mainWindow.loadURL("app://./home");
       mainWindow.webContents.openDevTools();
     }
   
@@ -66,7 +67,7 @@ function createWindow() {
 })();
 
 
-// ipcMain.on("serial:open", ipcMainController.serialConnectionOpen);
-// ipcMain.on("serial:close", ipcMainController.serialConnectionClose);
-// ipcMain.on("serial:list-ports", ipcMainController.serialListPorts);
-// ipcMain.on("db:get-all", ipcMainController.getDbData);
+ipcMain.on("serial:open", ipcMainController.serialConnectionOpen);
+ipcMain.on("serial:close", ipcMainController.serialConnectionClose);
+ipcMain.on("serial:list-ports", ipcMainController.serialListPorts);
+ipcMain.on("db:get-all", ipcMainController.getDbData);

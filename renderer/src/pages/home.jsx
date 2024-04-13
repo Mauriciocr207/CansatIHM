@@ -16,14 +16,12 @@ export default function Home() {
               >
                 <div className="flex lg:flex-1">
                   <a href="/home" className="-m-1.5 p-1.5">
-                    <div>
-                      <span className="sr-only">Eek</span>
-                      <img
-                        className="h-12 w-auto"
-                        src="/img/EEK__logo.webp"
-                        alt="logo"
-                      />
-                    </div>
+                    <span className="sr-only">Eek</span>
+                    <img
+                      className="h-12 w-auto"
+                      src="/img/EEK__logo.webp"
+                      alt="logo"
+                    />
                   </a>
                 </div>
                 <Popover.Group className="flex gap-x-12 text-base font-semibold leading-6">
@@ -80,9 +78,7 @@ export default function Home() {
                   href="https://github.com/Mauriciocr207/cansatProgram"
                   className="text-sm font-semibold leading-6 text-slate-800 dark:text-slate-300 flex items-center gap-2"
                 >
-                  <div>
-                    <FaGithub /> Proyecto <span aria-hidden="true">→</span>
-                  </div>
+                  <FaGithub /> Proyecto <span aria-hidden="true">→</span>
                 </a>
               </div>
             </div>

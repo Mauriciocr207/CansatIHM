@@ -24,67 +24,67 @@ export function PortInput({ id, title, className }) {
       setHeight(`${contentRef.current.clientHeight}px`);
     }
 
-    // ipcRenderer.on("serial:list-ports", (event, data) => {
-    //   setPorts(data);
-    // });
+    window.cansatApi.serialOnListPorts((event, data) => {
+      setPorts(data);
+    });
 
-    // ipcRenderer.on(`serial:open:${id}`, (event, data) => {
-    //   const { port, status, message } = data;
-    //   if (status) {
-    //     setActiveBtn(true);
-    //     setIsPortOpen(true);
-    //     setTypeAlert("success");
-    //     setTextSelect(
-    //       <>
-    //         <div className="flex gap-2 items-center">
-    //           <span className="w-2 h-2 rounded-full bg-green-500"></span>
-    //           <p>{port}</p>
-    //         </div>
-    //       </>
-    //     );
-    //   } else {
-    //     setTypeAlert("warning");
-    //     setActiveBtn(false);
-    //     setTextSelect(
-    //       <>
-    //         <div className="flex gap-2 items-center">
-    //           <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
-    //           <p>{port}</p>
-    //         </div>
-    //       </>
-    //     );
-    //   }
-    //   setTextAlert(message);
-    // });
+    window.cansatApi.serialOnOpen(id, (event, data) => {
+      const { port, status, message } = data;
+      if (status) {
+        setActiveBtn(true);
+        setIsPortOpen(true);
+        setTypeAlert("success");
+        setTextSelect(
+          <>
+            <div className="flex gap-2 items-center">
+              <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              <p>{port}</p>
+            </div>
+          </>
+        );
+      } else {
+        setTypeAlert("warning");
+        setActiveBtn(false);
+        setTextSelect(
+          <>
+            <div className="flex gap-2 items-center">
+              <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
+              <p>{port}</p>
+            </div>
+          </>
+        );
+      }
+      setTextAlert(message);
+    });
 
-    // ipcRenderer.on(`serial:close:${id}`, (event, data) => {
-    //   const { port, status, message } = data;
-    //   if (status) {
-    //     setActiveBtn(false);
-    //     setIsPortOpen(false);
-    //     setTypeAlert("off");
-    //     setTextSelect(
-    //       <>
-    //         <div className="flex gap-2 items-center">
-    //           <span className="w-2 h-2 rounded-full bg-gray-500"></span>
-    //           <p>{port}</p>
-    //         </div>
-    //       </>
-    //     );
-    //   } else {
-    //     setTypeAlert("warning");
-    //     setActiveBtn(false);
-    //     setTextSelect(
-    //       <>
-    //         <div className="flex gap-2 items-center">
-    //           <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
-    //           <p>{port}</p>
-    //         </div>
-    //       </>
-    //     );
-    //   }
-    //   setTextAlert(message);
-    // });
+    window.cansatApi.serialOnClose(id, (event, data) => {
+      const { port, status, message } = data;
+      if (status) {
+        setActiveBtn(false);
+        setIsPortOpen(false);
+        setTypeAlert("off");
+        setTextSelect(
+          <>
+            <div className="flex gap-2 items-center">
+              <span className="w-2 h-2 rounded-full bg-gray-500"></span>
+              <p>{port}</p>
+            </div>
+          </>
+        );
+      } else {
+        setTypeAlert("warning");
+        setActiveBtn(false);
+        setTextSelect(
+          <>
+            <div className="flex gap-2 items-center">
+              <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
+              <p>{port}</p>
+            </div>
+          </>
+        );
+      }
+      setTextAlert(message);
+    });
   }, []);
 
   function toggleCollapse() {
@@ -117,7 +117,7 @@ export function PortInput({ id, title, className }) {
       setTypeAlert("off");
       setTextAlert("...");
       if (port) {
-        // ipcRenderer.send("serial:close", { port, id });
+        window.cansatApi.serialClose({ port, id });
       }
     }
   }
@@ -125,9 +125,9 @@ export function PortInput({ id, title, className }) {
   function handleTogglePortBtn() {
     if (port) {
       if (!activeBtn) {
-        // ipcRenderer.send("serial:open", { port, id });
+        window.cansatApi.serialOpen({ port, id });
       } else {
-        // ipcRenderer.send("serial:close", { port, id });
+        window.cansatApi.serialClose({ port, id });
       }
     }
   }
@@ -160,7 +160,7 @@ export function PortInput({ id, title, className }) {
               >
                 {({ open }) => {
                   if (open) {
-                    // ipcRenderer.send("serial:list-ports");
+                    window.cansatApi.serialListPorts();
                   }
                   return (
                     <>
