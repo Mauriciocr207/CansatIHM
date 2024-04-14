@@ -22,10 +22,13 @@ contextBridge.exposeInMainWorld('cansatApi', {
   arduinoOnData: (callback) => {
     ipcRenderer.on('arduino:data', callback);
   },
-  dbGetAll: (data) => {
-    ipcRenderer.send('db:get-all', data);
+  dbGetByPage: (data) => {
+    ipcRenderer.send('db:get-by-page', data);
   },
-  dbOnGetAll: (callback) => {
-    ipcRenderer.on('db:get-all', callback);
+  dbOnGetByPage: (callback) => {
+    ipcRenderer.on('db:get-by-page', callback);
+  },
+  dbGetAll: (data) => {
+    return ipcRenderer.invoke('db:get-all', data);
   }
 });

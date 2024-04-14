@@ -70,4 +70,5 @@ function createWindow() {
 ipcMain.on("serial:open", ipcMainController.serialConnectionOpen);
 ipcMain.on("serial:close", ipcMainController.serialConnectionClose);
 ipcMain.on("serial:list-ports", ipcMainController.serialListPorts);
-ipcMain.on("db:get-all", ipcMainController.getDbData);
+ipcMain.on("db:get-by-page", ipcMainController.dbGetByPage);
+ipcMain.handle("db:get-all", ipcMainController.dbGetAll);

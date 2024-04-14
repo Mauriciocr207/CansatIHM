@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import usePort from "../../hooks/usePort";
+import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
+import { CSVDownload, CSVLink } from "react-csv";
 
 export default function Table() {
     const { isPortOpen } = usePort();
     const [pagination, setPagination] = useState({});
     const [page, setPage] = useState(1);
+    const [downloadData, setDownloadData] = useState([]);
     const fields = [
         "Id",
         "Tiempo",
@@ -24,8 +27,8 @@ export default function Table() {
     const [columns, setColumns] = useState([]);
 
     useEffect(() => {
-        window.cansatApi.dbGetAll({ page });
-        window.cansatApi.dbOnGetAll((e, data) => {
+        window.cansatApi.dbGetByPage({ page });
+        window.cansatApi.dbOnGetByPage((e, data) => {
             setPagination(data.pagination);
             setColumns(data.measurements)
         });
@@ -35,7 +38,7 @@ export default function Table() {
         if (isPortOpen) {
             console.log('ocupado');
         } else {
-            window.cansatApi.dbGetAll({ page });
+            window.cansatApi.dbGetByPage({ page });
         }
     }, [isPortOpen, page]);
 
@@ -47,7 +50,28 @@ export default function Table() {
         return pages;
     }
 
+    async function handleCsvClick(e, done) {
+        try {
+            const result = await window.cansatApi.dbGetAll();
+            setDownloadData(result.measurements);
+            done(true);
+        } catch (error) {
+            console.log(error);
+            done(false);
+        }
+    }
+
     return (<>
+        <div className="flex justify-end mb-3">
+          {columns.length !== 0 && <>
+            <CSVLink data={downloadData} asyncOnClick={true} onClick={handleCsvClick} filename="cansata_data.csv" className='flex items-center gap-3 px-5 py-2 text-sm font-medium text-center text-white bg-blue-500 rounded-lg cursor-pointer hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
+                <p className='text-xs'>Descarga csv</p>
+                <div className='w-4'>
+                    <ArrowDownTrayIcon/>
+                </div>
+            </CSVLink>
+          </>}
+        </div>
         {columns.length == 0 ?
             <>
                 <h1 className="font-semibold text-center text-xl mt-20 text-slate-500 dark:text-slate-300">Parece que no hay datos por ahora :(</h1>

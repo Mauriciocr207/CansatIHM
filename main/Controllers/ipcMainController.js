@@ -38,7 +38,7 @@ export class ipcMainController {
         .catch(err => console.log('error en ipcmain', err.message));
     }
 
-    static async getDbData(e, data) {
+    static async dbGetByPage(e, data) {
       try {
         const { page } = data;
         const perPage = 10;
@@ -46,7 +46,7 @@ export class ipcMainController {
           offset: (+page - 1) * perPage, limit: perPage,
         });
         const measurements = measurementInstances.map(({dataValues}) => dataValues);
-        e.reply('db:get-all', {
+        e.reply('db:get-by-page', {
           status: true,
           measurements,
           pagination: {
@@ -57,9 +57,22 @@ export class ipcMainController {
           }
         })
       } catch (error) {
-        e.reply('db:get-all', {
+        e.reply('db:get-by-page', {
           status: false, message: "Ocurrió un error al obtener los datos"
         });
+      }
+    }
+
+    static async dbGetAll(e, data) {
+      try {
+        const measurementInstances = await Measurement.findAll();
+        const measurements = measurementInstances.map(({dataValues}) => dataValues);
+        return {measurements};
+      } catch (error) {
+        return {
+          status: false,
+          message: `Ocurrió un error al obtener los datos: ${error.message}`
+        }
       }
     }
 }
