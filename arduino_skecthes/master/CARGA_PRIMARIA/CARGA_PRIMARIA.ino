@@ -5,15 +5,24 @@
 #include <SoftwareSerial.h>
 #include <LoRa.h>
 #include <Servo.h>
+#include <Kalman.h>
+
+
 
 Adafruit_BMP280 bmp;
 MPU6050 mpu(Wire);
 TinyGPSPlus gps;
 SoftwareSerial gpsSerial( 5,6 ); // Tx (5) , Rx (6)
 Servo servo;
-float data[10];
+float data[12];
 bool deploymentReady = false;
 float deploymentHeight = 25;
+
+KALMAN<1,1> Kalman;
+BLA::Matrix<1> accel;
+float vel = 0.0;
+float time = 0;
+float dt = 0;
 
 void setup() {
   Wire.begin();
@@ -30,31 +39,55 @@ void setup() {
   }
   servo.attach(8);
   servo.write(0);
+
+  // Kalman filter
+  Kalman.F = {1.0};
+  Kalman.H = {1.0};
+  Kalman.R = {0.2*0.2};
+  Kalman.Q = {0.1*0.1};
+
   Serial.println("Done!\n");
 }
 
 void loop() {
+  dt = millis()/1000 - time;
+  time = millis()/1000;
   sensorsUpdate();
   sendData();
 }
 
 void sensorsUpdate() {
+  // update sensor data
   mpu.update();
+
+  // Apply kalman filter
+  accel(0) = mpu.getAccZ();
+  Kalman.update(accel);
+
+  // get kalman filter result 
+  float az = Kalman.x(0);
+
+  // calculate velocity
+  vel += az*dt;
+  
+  // save all data
   data[0] = mpu.getAngleX(); 
   data[1] = mpu.getAngleY(); 
   data[2] = mpu.getAngleZ();
-  data[3] = bmp.readTemperature();
-  data[4] = bmp.readPressure()/3377;
-  data[5] = bmp.readAltitude(1013);
+  data[3] = az;
+  data[4] = vel;
+  data[5] = bmp.readTemperature();
+  data[6] = bmp.readPressure()/3377;
+  data[7] = bmp.readAltitude(1013);
   while(gpsSerial.available()) {
     gps.encode(gpsSerial.read());
   }
   if(gps.location.isValid()) {
-    data[6] = gps.location.lat();
-    data[7] = gps.location.lng(); 
-    data[8] = gps.altitude.meters(); 
+    data[8] = gps.location.lat();
+    data[9] = gps.location.lng(); 
+    data[10] = gps.altitude.meters(); 
   }
-  data[9] = millis();
+  data[11] = millis();
 
   verifyDeployment();
 }
