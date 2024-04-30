@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, ipcMain } from 'electron';
 import { SerialPort, DelimiterParser } from 'serialport';
 import Measurement from '../Models/Measurement.js';
 
@@ -14,12 +14,14 @@ export class SerialPortConnection {
         });
         const parse = this.serial.pipe(new DelimiterParser({ delimiter: '\n' }));
         parse.on('data', (data) => {
-            let jsonData = data.toString();                                          //Convert to string
+            let jsonData = data.toString();
             try {
-                jsonData = jsonData.replace(/\r?\n|\r/g, "");                               //remove '\r' from this String
-                jsonData = JSON.stringify(data);                                        // Convert to JSON
-                jsonData = JSON.parse(data);                                            // Convert to JS object
-                // this.saveOnDB(jsonData);
+                jsonData = jsonData.replace(/\r?\n|\r/g, "");
+                jsonData = JSON.stringify(data);
+                jsonData = JSON.parse(data);
+
+                // here save on db
+                
                 this.sendToWindow(1, jsonData);
             } catch (err) {
                 console.log(`${err.message} : ${jsonData}`); 
@@ -43,14 +45,6 @@ export class SerialPortConnection {
         }
     };
 
-    write(data) {
-        try {
-            this.serial.write(Buffer.from(data));
-        } catch (error) {
-            this.errMsg = error.message;
-        }
-    }
-
     close() {
         try {
             return new Promise((res, rej) => {
@@ -67,43 +61,15 @@ export class SerialPortConnection {
         }
     }
 
-    hasError() {
-        return this.errMsg !== null;
-    }
-
-    getError() {
-        return this.errMsg;
+    write(data) {
+        try {
+            this.serial.write(Buffer.from(data));
+        } catch (error) {
+            this.errMsg = error.message;
+        }
     }
 
     sendToWindow(windowId, data) {
         BrowserWindow.fromId(windowId).webContents.send('arduino:data', data);     // Send to principal window
-    }
-
-    saveOnDB(data) {
-        const {
-            time,
-            giro,
-            temp,
-            pres,
-            alt,
-            gps
-        } = data;
-        Measurement.create({
-            presion: pres,
-            temperatura: temp,
-            velocidad: 0,
-            yaw: giro[0],
-            tiempo: time,
-            humedad: 0,
-            longitud: gps[0],
-            latitud: gps[1],
-            altitud: alt,
-            accelX: 0,
-            accelY: 0,
-            accelZ: 0,
-            pitch: giro[1],
-            roll: giro[2],
-        }).catch(()=>{});
-    }
-    
+    }    
 };

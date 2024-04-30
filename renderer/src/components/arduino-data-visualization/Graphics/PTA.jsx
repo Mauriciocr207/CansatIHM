@@ -53,9 +53,9 @@ const data = {
 
 export function PTA() {
   const [chartData, setChartData] = useState(data);
-  function updateData(temp, presion, alt) {
+  function updateData(presion, temp, alt) {
     setChartData(prevChartData => {
-      const {datasets, labels} = prevChartData;
+      const {datasets} = prevChartData;
 
       let {data:tempData} = datasets[0];
       let {data:presionData} = datasets[1];
@@ -65,8 +65,6 @@ export function PTA() {
       presionData = [...presionData.slice(1), presion];
       altitudData = [...altitudData.slice(1), alt];
 
-    
-      // console.log(newData);
       return {
         ...prevChartData,
         datasets: [
@@ -79,11 +77,11 @@ export function PTA() {
   }
   
   useEffect(() => {
-    // ipcRenderer.on('arduino:data', (e, {pres, temp, alt}) => {
-    //   if(pres, temp, alt) {
-    //     // updateData(pres, tempa, alt);
-    //   }
-    // })
+    window.cansatApi.arduinoOnData((e, {pres, temp, alt}) => {
+      if(!isNaN(pres) && !isNaN(temp) && !isNaN(alt)) {
+        updateData(pres, temp, alt);
+      }
+    })
   }, []);
 
   return (<><Line data={chartData} options={options}/></>);

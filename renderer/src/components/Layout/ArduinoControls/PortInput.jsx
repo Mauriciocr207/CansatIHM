@@ -237,7 +237,3 @@ export function PortInput({ id, title, className }) {
     </>
   );
 }
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}

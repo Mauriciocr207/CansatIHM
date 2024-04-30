@@ -75,7 +75,7 @@ export default function Home() {
                 </a>
                 <a
                   target="_blank"
-                  href="https://github.com/Mauriciocr207/cansatProgram"
+                  href="https://github.com/Mauriciocr207/CansatIHM"
                   className="text-sm font-semibold leading-6 text-slate-800 dark:text-slate-300 flex items-center gap-2"
                 >
                   <FaGithub /> Proyecto <span aria-hidden="true">→</span>

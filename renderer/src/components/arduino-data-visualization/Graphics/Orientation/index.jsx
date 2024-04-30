@@ -6,16 +6,16 @@ import { useEffect, useState } from 'react';
 export function Orientation() {
     const [angs, setAngs] = useState([0,0,0]);
     useEffect(() => {
-        // ipcRenderer.on('arduino:data', (event, data) => {
-        //     const {gyro: [ang_x, ang_y, ang_z]} = data;
-        //     if(!isNaN(ang_x) && !isNaN(ang_y) && !isNaN(ang_z)) {
-        //         setAngs([
-        //             ang_x * Math.PI / 180,
-        //             ang_y * Math.PI / 180,
-        //             ang_z * Math.PI / 180,
-        //         ]);
-        //     }
-        // });
+        window.cansatApi.arduinoOnData((event, data) => {
+            const {ang: [ang_x, ang_y, ang_z]} = data;
+            if(!isNaN(ang_x) && !isNaN(ang_y) && !isNaN(ang_z)) {
+                setAngs([
+                    ang_x * Math.PI / 180,
+                    ang_z * Math.PI / 180,
+                    -(ang_y * Math.PI / 180),
+                ]);
+            }
+        });
     }, []);
     return <>
         <div className='w-full h-full rounded-lg overflow-hidden'>

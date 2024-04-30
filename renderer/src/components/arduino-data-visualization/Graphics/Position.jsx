@@ -33,7 +33,7 @@ const option = {
       {
         coordinateSystem: 'polar',
         type: 'line',
-        data: [[5, 30]]
+        data: [[0,0]]
       }
     ]
   };
@@ -64,16 +64,18 @@ export function Position() {
   }, [size]);
 
   useEffect(() => {
-    // ipcRenderer.on('arduino:data', (e, {vel}) => {
-    //   echarts.getInstanceByDom(chart.current).setOption({
-    //     series: [{
-    //         coordinateSystem: 'polar',
-    //         name: 'line',
-    //         type: 'line',
-    //         data: [[5, 30]]
-    //     }]
-    //   });
-    // })
+    window.cansatApi.arduinoOnData((e, {gps}) => {
+      if(gps) {
+        echarts.getInstanceByDom(chart.current).setOption({
+          series: [{
+              coordinateSystem: 'polar',
+              name: 'line',
+              type: 'line',
+              data: [gps]
+          }]
+        });
+      }
+    })
   }, []);
 
   return (

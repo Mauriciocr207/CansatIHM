@@ -9,7 +9,7 @@ export class ipcMainController {
       try {
         await serialManager.getConnection(port).open();
         e.reply(`serial:open:${id}`, {
-          port, status: true, message: "Puerto cerrado"
+          port, status: true, message: "Conectado Correctamente"
         });
       } catch (error) {
         e.reply(`serial:open:${id}`, {
@@ -23,7 +23,7 @@ export class ipcMainController {
       try {
         await serialManager.getConnection(port).close();
         e.reply(`serial:close:${id}`, {
-          port, status: true, message: "Conectado correctamente"
+          port, status: true, message: "Puerto Cerrado"
         });
       } catch (error) {
         e.reply(`serial:close:${id}`, {
@@ -73,6 +73,14 @@ export class ipcMainController {
           status: false,
           message: `Ocurrió un error al obtener los datos: ${error.message}`
         }
+      }
+    }
+
+    static async saveData(e, data) {
+      try {
+        
+      } catch (error) {
+        
       }
     }
 }

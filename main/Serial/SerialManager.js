@@ -10,8 +10,7 @@ export class SerialManager {
      */
     getConnection(port) {
         if(!this.connections[port]) {
-            const connection = new SerialPortConnection(port);
-            this.connections[`${port}`] = connection;        
+            this.connections[port] = new SerialPortConnection(port);
         }
         return this.connections[port];
     }
