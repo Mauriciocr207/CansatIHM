@@ -44,12 +44,12 @@ void setup() {
 }
 
 void loop() {
-  // String message = "HeLoRa World!";   // send a message
-  // sendMessage(message);
-  // Serial.println("Sending " + message);
+  String message = "HeLoRa World!";   // send a message
+  sendMessage(message);
+  Serial.println("Sending " + message);
 
   // parse for a packet, and call onReceive with the result:
-  onReceive(LoRa.parsePacket());
+  // onReceive(LoRa.parsePacket());
   // delay(10);
 }
 
