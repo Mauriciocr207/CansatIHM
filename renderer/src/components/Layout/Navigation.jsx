@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Popover } from '@headlessui/react'
 import { ThemeBtn } from './ThemeBtn';
 

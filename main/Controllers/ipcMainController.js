@@ -75,12 +75,4 @@ export class ipcMainController {
         }
       }
     }
-
-    static async saveData(e, data) {
-      try {
-        
-      } catch (error) {
-        
-      }
-    }
 }

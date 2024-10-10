@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import usePort from "../../hooks/usePort";
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
-import { CSVDownload, CSVLink } from "react-csv";
+import { CSVLink } from "react-csv";
+import { IoReload } from "react-icons/io5";
 
 export default function Table() {
     const { isPortOpen } = usePort();
@@ -61,8 +62,16 @@ export default function Table() {
         }
     }
 
+    function onReload(e) {
+        if(page == 1) {
+            window.cansatApi.dbGetByPage({ page });
+        } else {
+            setPage(1);
+        }
+    }
+
     return (<>
-        <div className="flex justify-end mb-3">
+        <div className="flex justify-end items-center mb-3 mx-5 gap-x-4">
           {columns.length !== 0 && <>
             <CSVLink data={downloadData} asyncOnClick={true} onClick={handleCsvClick} filename="cansata_data.csv" className='flex items-center gap-3 px-5 py-2 text-sm font-medium text-center text-white bg-blue-500 rounded-lg cursor-pointer hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
                 <p className='text-xs'>Descarga csv</p>
@@ -70,6 +79,7 @@ export default function Table() {
                     <ArrowDownTrayIcon/>
                 </div>
             </CSVLink>
+            <IoReload style={{cursor: isPortOpen ? 'not-allowed':'pointer'}} disabled={isPortOpen ? true:false} onClick={onReload}/>
           </>}
         </div>
         {columns.length == 0 ?
@@ -127,10 +137,10 @@ export default function Table() {
                                 Anterior
                             </button>
                         </li>
-                        {getPages().map((page) => (<>
-                            <li key={page}>
-                                <button onClick={(e) => setPage(+e.target.textContent)} href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    {page}
+                        {getPages().map((numPage) => (<>
+                            <li key={numPage}>
+                                <button onClick={(e) => setPage(+e.target.textContent)} href="#" className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`} style={{backgroundColor: numPage == page ? 'rgb(229 231 235)':''}}>
+                                    {numPage}
                                 </button>
                             </li>
                         </>)

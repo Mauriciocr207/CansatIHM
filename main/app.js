@@ -47,7 +47,6 @@ function createWindow() {
       mainWindow.webContents.openDevTools();
     } else {
       await mainWindow.loadURL("app://./home");
-      mainWindow.webContents.openDevTools();
     }
   
     // MacOS

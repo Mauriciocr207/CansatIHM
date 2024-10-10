@@ -14,26 +14,40 @@ export class SerialPortConnection {
         });
         const parse = this.serial.pipe(new DelimiterParser({ delimiter: '\n' }));
         parse.on('data', (data) => {
-            let jsonData = data.toString();
             try {
+                let jsonData = data.toString();
                 jsonData = jsonData.replace(/\r?\n|\r/g, "");
                 jsonData = JSON.stringify(data);
                 jsonData = JSON.parse(data);
 
-                // here save on db
-                
+                Measurement.create({
+                    time: 0,
+                    temperature: jsonData.temp,
+                    pressure: jsonData.pres,
+                    velocity: jsonData.vel,
+                    height: jsonData.alt,
+                    aceleration: jsonData.accel,
+                    angle_x: jsonData.ang[0],
+                    angle_y: jsonData.ang[1],
+                    angle_z: jsonData.ang[2],
+                    latitude_cp: jsonData.cp[0],
+                    length_cp: jsonData.cp[1],
+                    latitude_cs: jsonData.cs[0],
+                    length_cs: jsonData.cs[1],
+                });
+
                 this.sendToWindow(1, jsonData);
             } catch (err) {
-                console.log(`${err.message} : ${jsonData}`); 
-            }                                                                             
+                console.log(`${err.message} : ${jsonData}`);
+            }
         });
     }
 
     open() {
         try {
             return new Promise((res, rej) => {
-                this.serial.open(function(err) {
-                    if(err) {
+                this.serial.open(function (err) {
+                    if (err) {
                         rej(err.message)
                     } else {
                         res();
@@ -48,8 +62,8 @@ export class SerialPortConnection {
     close() {
         try {
             return new Promise((res, rej) => {
-                this.serial.close(function(err) {
-                    if(err) {
+                this.serial.close(function (err) {
+                    if (err) {
                         rej(err.message)
                     } else {
                         res();
@@ -71,5 +85,5 @@ export class SerialPortConnection {
 
     sendToWindow(windowId, data) {
         BrowserWindow.fromId(windowId).webContents.send('arduino:data', data);     // Send to principal window
-    }    
+    }
 };

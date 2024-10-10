@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MdOutlineWbSunny } from "react-icons/md";
 import { BsFillMoonStarsFill } from "react-icons/bs";
+import { string } from "prop-types";
 
 
 export function ThemeBtn({className}) {
@@ -24,9 +25,14 @@ export function ThemeBtn({className}) {
             return !prev
         });
     }
+    
     return <>
         <div onClick={handleThemeSwitch} className={`${className} cursor-pointer`}>
             {darkMode ? (<BsFillMoonStarsFill/>):(<MdOutlineWbSunny/>)}
         </div>
     </>
+}
+
+ThemeBtn.propTypes = {
+    className: string
 }

@@ -1,42 +1,52 @@
 import * as echarts from "echarts";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import useComponentSize from "@rehooks/component-size";
+import getPositionFromCoords from "../../../utils/getPositionFromCoords";
 
 const option = {
-    legend: {
-      data: ['line']
+  legend: {
+    data: ["line"],
+  },
+  polar: {
+    radius: "75%",
+  },
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      type: "cross",
     },
-    polar: {
-      radius: "75%",
+  },
+  angleAxis: {
+    type: "value",
+    min: 0,
+    max: 360,
+    axisLabel: {
+      inside: true,
+      fontSize: 8,
+      interval: 1,
+      formatter: (value) => {
+        return value % 20 === 0 ? value : "";
+      },
     },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross'
-      }
+  },
+  radiusAxis: {
+    max: 20,
+    axisLabel: {
+      fontSize: 8,
+      interval: 1,
+      formatter: (value) => {
+        return value % 10 === 0 ? value : "";
+      },
     },
-    angleAxis: {
-      type: 'value',
-      min: 0,
-      max: 360,
-      axisLabel: {inside:true, fontSize: 8, interval: 1, formatter: (value) => {
-        return value % 20 === 0 ? value : '';
-      }}
+  },
+  series: [
+    {
+      coordinateSystem: "polar",
+      type: "line",
+      data: [[0, 0]],
     },
-    radiusAxis: {
-      max: 20,
-      axisLabel: {fontSize: 8, interval: 1, formatter: (value) => {
-        return value % 10 === 0 ? value : '';
-      }}
-    },
-    series: [
-      {
-        coordinateSystem: 'polar',
-        type: 'line',
-        data: [[0,0]]
-      }
-    ]
-  };
+  ],
+};
 
 export function Position() {
   const chart = useRef(null);
@@ -58,24 +68,28 @@ export function Position() {
     renderChart();
     if (chartInstance != null) {
       chartInstance.resize({
-        height: size.height
+        height: size.height,
       });
     }
   }, [size]);
 
   useEffect(() => {
-    window.cansatApi.arduinoOnData((e, {gps}) => {
-      if(gps) {
+    window.cansatApi.arduinoOnData((e, { cp, cs }) => {
+      if (cp && cs) {
+        const position = getPositionFromCoords(cp, cs);
+
         echarts.getInstanceByDom(chart.current).setOption({
-          series: [{
-              coordinateSystem: 'polar',
-              name: 'line',
-              type: 'line',
-              data: [gps]
-          }]
+          series: [
+            {
+              coordinateSystem: "polar",
+              name: "line",
+              type: "line",
+              data: [position],
+            },
+          ],
         });
       }
-    })
+    });
   }, []);
 
   return (
@@ -87,4 +101,4 @@ export function Position() {
       }}
     />
   );
-};
+}

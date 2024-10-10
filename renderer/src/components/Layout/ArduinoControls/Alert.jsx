@@ -1,4 +1,5 @@
 import { ExclamationTriangleIcon, XCircleIcon, CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
+import { element, string } from "prop-types";
 export function Alert({children, type = "success", title="Estatus"}) {
     const alerts = {
         success: {icon: <CheckCircleIcon className='w-5 text-green-500 dark:text-green-400'/>, classColor: "bg-green-100 dark:bg-green-900 text-green-700/90 dark:text-green-300/90", headColor: "text-green-500 dark:text-green-300"},
@@ -15,4 +16,10 @@ export function Alert({children, type = "success", title="Estatus"}) {
             </main>
         </div>
     </>)
+}
+
+Alert.propTypes = {
+    children: element,
+    type: string,
+    title: string
 }

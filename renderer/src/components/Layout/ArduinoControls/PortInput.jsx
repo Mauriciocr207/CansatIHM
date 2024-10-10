@@ -4,6 +4,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Alert } from "./Alert";
 import usePort from "../../../hooks/usePort";
+import { string } from "prop-types"
 
 export function PortInput({ id, title, className }) {
   const contentRef = useRef(null);
@@ -236,4 +237,10 @@ export function PortInput({ id, title, className }) {
       </li>
     </>
   );
+}
+
+PortInput.propTypes = {
+    id: string,
+    title: string,
+    className: string
 }
