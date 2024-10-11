@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const maxMeasurements = 20;
+    const maxMeasurements = 100;
     function generateRandomFloat() {
       return (Math.random() * 100).toFixed(2);
     }
