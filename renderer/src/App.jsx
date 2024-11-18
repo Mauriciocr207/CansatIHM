@@ -6,18 +6,19 @@ import PortProvider from "./context/PortProvider";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <PortProvider>
-          <Routes>
-            <Route path="/home" element={<Home/>}/>
-            <Route path="/arduino-data-visualization" element={<ArduinoDataVisualization/>}/>
-            <Route path="/data-table" element={<DataTable/>}/>
-          </Routes>
-        </PortProvider>
-      </BrowserRouter>
-    </>
-  )
+    <BrowserRouter>
+      <PortProvider>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route
+            path="/arduino-data-visualization"
+            element={<ArduinoDataVisualization />}
+          />
+          <Route path="/data-table" element={<DataTable />} />
+        </Routes>
+      </PortProvider>
+    </BrowserRouter>
+  );
 }
 
 export default App

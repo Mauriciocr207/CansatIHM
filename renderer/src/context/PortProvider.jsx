@@ -1,4 +1,5 @@
 import { createContext, useState } from "react"
+import { node } from "prop-types"
 
 export const PortContext = createContext();
 
@@ -12,4 +13,8 @@ export default function PortProvider({children}) {
             {children}
         </PortContext.Provider>
     </>)
+}
+
+PortProvider.propTypes = {
+    children: node.isRequired
 }
