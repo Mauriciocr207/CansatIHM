@@ -4,7 +4,7 @@
   "description": "cansat - satelites enlatados",
   "type": "module",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "Mauricio Carrillo",
   "main": "main/app.js",
   "scripts": {
     "dev": "concurrently \"vite ./renderer\" \"wait-on tcp:3000 && cross-env NODE_ENV=development electron ./main/app.js\" ",
